@@ -1,6 +1,6 @@
 import React from "react";
 import { getImageUrl } from "../utails/chine-utails";
-export default function MovieCardModal({ movie, onClosed }) {
+export default function MovieCardModal({ movie, onClosed,onCardAdd }) {
   const { title, description, price, genre, cover } = movie;
   return (
     <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black/60 backdrop-blur-sm">
@@ -25,14 +25,15 @@ export default function MovieCardModal({ movie, onClosed }) {
             <div className="grid lg:grid-cols-2 gap-2">
               <a
                 className="bg-primary rounded-lg py-2 px-5 flex items-center justify-center gap-2 text-[#171923] font-semibold text-sm"
-                href="#"
+                onClick={(e)=>onCardAdd(e,movie)}
               >
                 <img src="./assets/tag.svg" alt="" />
                 <span>${price} | Add to Cart</span>
               </a>
               <a
                 className="border border-[#74766F] rounded-lg py-2 px-5 flex items-center justify-center gap-2 text-[#6F6F6F] dark:text-gray-200 font-semibold text-sm"
-                onClick={() => onClosed(movie)}
+                // onClick={() => onClosed(movie)}
+                onClick={onClosed}
               >
                 Cancel
               </a>
