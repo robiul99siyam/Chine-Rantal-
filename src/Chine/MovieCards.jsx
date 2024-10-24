@@ -3,26 +3,38 @@ import { getImageUrl } from "../utails/chine-utails";
 import Rating from "./Rating";
 import MovieCardModal from "./MovieCardModal";
 import { MovieContext } from "../context";
-
+import { toast } from "react-toastify";
 export default function MovieCards({ movie }) {
   const [showModal, setShowModal] = useState(false);
   const [selectMovie, setSelectMovie] = useState(null);
   const { id, title, price, rating, genre, description, cover } = movie;
-  const { cardData, setCardData } = useContext(MovieContext);
+  const { state, dispatch } = useContext(MovieContext);
 
   const handleAddToCard = (e, movie) => {
     e.stopPropagation();
-    // const found = cardData.find((item) => item.id === movie.id);
+
     let found = false
-    for(let i=0;i<cardData.length;i++){
-      if(cardData[i].id === movie.id){
+  
+
+    for(let i=0;i<state.cardData.length;i++){
+      if(state.cardData[i].id === movie.id){
         found = true
       }
     }
+   
     if (!found) {
-      setCardData([...cardData, movie]);
+      // setCardData([...state.cardData, movie]);
+      dispatch({
+        type: "ADD_TO_CART",
+        payload: {
+          ...movie,
+        },
+      });
+      toast.success(`Movie ${movie.title} add to cart`,)
     } else {
-      alert(`This movie already Add to card now ${movie.title}`);
+
+      toast.error(`Movie ${movie.title} already exsit`,)
+      // alert(`This movie already Add to card now ${movie.title}`);
     }
   };
   const handleShowModal = (movie) => {
@@ -35,11 +47,14 @@ export default function MovieCards({ movie }) {
     setShowModal(false);
   };
 
-
   return (
     <>
       {showModal && (
-        <MovieCardModal movie={selectMovie} onCardAdd={handleAddToCard} onClosed={handleCloseModel} />
+        <MovieCardModal
+          movie={selectMovie}
+          onCardAdd={handleAddToCard}
+          onClosed={handleCloseModel}
+        />
       )}
       <figure className="p-4 border border-black/10 shadow-sm dark:border-white/10 rounded-xl">
         <a onClick={() => handleShowModal(movie)}>
